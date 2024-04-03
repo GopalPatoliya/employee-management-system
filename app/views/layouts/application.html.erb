@@ -5,12 +5,26 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_importmap_tags %>
   </head>
-
+    
   <body>
+    <div id="flash-messages">
+      <% flash.each do |type, message| %>
+        <div class="notice notice-<%= type %>">
+          <p class="notice"><%= notice %> <%= alert %></p>
+        </div>
+      <% end %>
+    </div>
+    <% if user_signed_in? %>
+      <div class="sign-out-container">
+        <% if user_signed_in? %>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "sign-out-btn" %>
+        <% end %>
+      </div>  
+    <% end %>
     <%= yield %>
   </body>
 </html>

@@ -1,0 +1,61 @@
+<h1 class="header1">Employees</h1>
+
+<div class="button-container">
+  <%= form_tag(import_from_api_employees_path, method: :post) do %>
+    <%= button_tag 'Import Data from API', class: 'btn btn-primary' %>
+  <% end %>
+  <%= button_to "New Employee", new_employee_path, class: "btn btn-primary" %>
+</div>
+
+<div class="search-form" style="">
+  <div style="display: inline-block;">
+    <%= form_tag employees_path, method: :get, remote: true, id: 'filter-form' do %>
+      <div class="form-group">
+        <%= label_tag :department, "Department" %>
+        <%= select_tag :department, options_for_select(Employee.all_departments, params[:department]), { class: 'form-control', include_blank: 'Select Department' } %>
+      </div>
+      <div class="form-group">
+        <%= label_tag :min_salary, "Min Salary" %>
+        <%= number_field_tag :min_salary, params[:min_salary], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= label_tag :max_salary, "Max Salary" %>
+        <%= number_field_tag :max_salary, params[:max_salary], class: 'form-control' %>
+      </div>
+      <%= submit_tag "Filter", class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+  <div style="display: inline-block; vertical-align: top;">
+    <%= button_to "Reset", employees_path, method: :get, params: {}, form: { id: 'filter-form' }, class: 'btn btn-secondary' %>
+  </div>
+</div>
+
+<div id="employees-list">
+  <%= render 'employees_list' %>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#filter-form').submit(function(event) {
+      event.preventDefault();
+      const formData = $(this).serialize();
+      const url = $(this).attr('action');
+
+      $.ajax({
+        url: url,
+        method: 'GET',
+        data: formData,
+        dataType: 'html',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        },
+        success: function(response) {
+          $('#employees-list').html(response);
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX Error:', error);
+        }
+      });
+    });
+  });
+</script>
