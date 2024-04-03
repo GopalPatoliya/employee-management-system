@@ -4,7 +4,7 @@
   <%= form_tag(import_from_api_employees_path, method: :post) do %>
     <%= button_tag 'Import Data from API', class: 'btn btn-primary' %>
   <% end %>
-  <%= button_to "New Employee", new_employee_path, class: "btn btn-primary" %>
+  <%= button_to "New Employee", new_employee_path,method: :get, class: "btn btn-primary" %>
 </div>
 
 <div class="search-form" style="">
